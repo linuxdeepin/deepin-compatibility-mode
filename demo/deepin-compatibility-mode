@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+if [[ $SCRIPT_DEBUG ]]; then
+	set -x
+fi
+
+deepin_compatibility_mode_path="$(dirname "${0}")"
+deepin_compatibility_mode_command="${1}"
+shift
+
+case "$deepin_compatibility_mode_command" in
+
+repack)
+	exec "$deepin_compatibility_mode_path"/deepin-compatibility-mode-repack "$@"
+	;;
+
+start)
+	exec "$deepin_compatibility_mode_path"/deepin-compatibility-mode-start "$@"
+	;;
+
+install)
+	exec "$deepin_compatibility_mode_path"/deepin-compatibility-mode-install "$@"
+	;;
+
+esac

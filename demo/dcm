@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ $SCRIPT_DEBUG ]]; then
+	set -x
+fi
+
+. "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)/deepin-compatibility-mode" "$@"

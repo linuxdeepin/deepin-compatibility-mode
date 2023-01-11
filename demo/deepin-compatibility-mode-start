@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+if [[ $SCRIPT_DEBUG ]]; then
+	set -x
+fi
+
+main() {
+	options=$(getopt -n dcm -l "deb-id:" -o "hv" -- "$@")
+	eval set -- "$options"
+
+	deb_id=""
+	while true; do
+		case "$1" in
+		-h)
+			echo "TODO"
+			exit
+			;;
+		-v)
+			echo "TODO"
+			exit
+			;;
+		--deb-id)
+			deb_id="$2"
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+		esac
+	done
+
+	deepin_compatibility_mode_path="$(dirname "${0}")"
+        
+	"$deepin_compatibility_mode_path/deepin-compatibility-mode-install" --deb-id="$deb_id"
+
+	container=$("$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
+
+	container_name=$(echo "$container" | jq -r ".name")
+
+	exec distrobox enter -n "$container_name" -- "$@"
+}
+
+main "$@"

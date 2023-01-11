@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+if [[ $SCRIPT_DEBUG ]]; then
+	set -x
+fi
+
+deepin_compatibility_mode_path="$(dirname "${0}")"
+
+main() {
+	options=$(getopt -n dcm -l "deb-id:" -o "hv" -- "$@")
+	eval set -- "$options"
+
+	deb_id=""
+	while true; do
+		case "$1" in
+		-h)
+			echo "TODO"
+			exit
+			;;
+		-v)
+			echo "TODO"
+			exit
+			;;
+		--deb-id)
+			deb_id="$2"
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+		esac
+	done
+
+	container=$("$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
+
+	container_name=$(echo "$container" | jq -r ".name")
+	if ! distrobox-list | grep "$container_name" &>/dev/null; then
+		distrobox create -Y \
+			-i "$(echo "$container" | jq -r ".image")" \
+			-n "$container_name" || exit
+	fi
+
+	debs=()
+	while IFS= read -r -d $'\0'; do
+		debs+=("\"${REPLY/#//run/host}\"")
+	done < <(find /opt/apps/"$deb_id"/files -name '*.deb' -print0)
+
+	exec distrobox enter -n "$container_name" -- bash -i -c \
+		"sudo apt install ${debs[*]}"
+}
+
+main "$@"
