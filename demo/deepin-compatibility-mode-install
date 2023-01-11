@@ -47,7 +47,7 @@ main() {
 	done < <(find /opt/apps/"$deb_id"/files -name '*.deb' -print0)
 
 	exec distrobox enter -n "$container_name" -- bash -i -c \
-		"sudo apt install ${debs[*]}"
+		"sudo apt install -y ${debs[*]}"
 }
 
 main "$@"
