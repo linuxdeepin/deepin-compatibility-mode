@@ -1,0 +1,4 @@
+[submodule "docker"]
+	path = docker
+	url = https://github.com/black-desk/deepin-docker
+	branch = v20.8-compatible
