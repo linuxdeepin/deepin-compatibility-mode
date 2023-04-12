@@ -9,6 +9,11 @@ shift
 
 # TODO(black_desk): search db or somehow get container configuration
 
+# NOTE(black_desk): we should load tar before we return
+docker images 2>&1 | grep v20.8-compatible ||
+	docker load /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz &>/dev/null ||
+	exit 255
+
 echo '{
         "name": "DeepinV20.8CompatibleMode",
         "image": "linuxdeepin/apricot:v20.8-compatible"
