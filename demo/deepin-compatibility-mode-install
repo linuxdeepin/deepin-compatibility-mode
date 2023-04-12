@@ -32,7 +32,7 @@ main() {
 		esac
 	done
 
-	container=$("$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
+	container=$(. "$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
 
 	container_name=$(echo "$container" | jq -r ".name")
 	if ! distrobox-list | grep "$container_name" &>/dev/null; then
