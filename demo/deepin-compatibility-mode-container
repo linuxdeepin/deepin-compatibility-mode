@@ -10,6 +10,6 @@ shift
 # TODO(black_desk): search db or somehow get container configuration
 
 echo '{
-        "name": "DeepinV20.8CompatibilityMode",
-        "image": "docker.io/linuxdeepin/apricot"
+        "name": "DeepinV20.8CompatibleMode",
+        "image": "linuxdeepin/apricot:v20.8-compatible"
 }'
