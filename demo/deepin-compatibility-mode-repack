@@ -7,7 +7,7 @@ function handle_usr_desktop() {
 
 	for desktop in "${desktops[@]}"; do
 		cp "$desktop" "$3"
-		sed "s/Exec=/Exec=loader --deb-id $2 -- /g" -i "$3"/"$(basename "$desktop")"
+		sed "s/Exec=/Exec=dcm start --deb-id $2 -- /g" -i "$3"/"$(basename "$desktop")"
 	done
 }
 
