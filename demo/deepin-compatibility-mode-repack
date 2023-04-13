@@ -6,8 +6,8 @@ function handle_usr_desktop() {
 	desktops=$(find "$1"/applications -name "*.desktop")
 
 	for desktop in "${desktops[@]}"; do
-		cp "$desktop" "$2"
-		sed "s/Exec=/Exec=loader --deb-id $(basename "$file") -- /g" -i "$2"/"$(basename "$desktop")"
+		cp "$desktop" "$3"
+		sed "s/Exec=/Exec=loader --deb-id $2 -- /g" -i "$3"/"$(basename "$desktop")"
 	done
 }
 
@@ -34,14 +34,14 @@ fi
 if [[ -d "tmp/opt" ]]; then
 	apps=$(ls tmp/opt/apps)
 	for p in "${apps[@]}"; do
-		handle_usr_desktop tmp/opt/apps/"$p"/entries "$working_dir"/applications/
+		handle_usr_desktop tmp/opt/apps/"$p"/entries "$p" "$working_dir"/applications/
 		cp -a tmp/opt/apps/"$p"/entries/icons "$working_dir"/ # check exists
 		cp -a tmp/opt/apps/"$p"/info "$working_dir"
 	done
 fi
 
-mkdir -p "$working_dir"/files
-cp "$file_real_path" "$working_dir"/files/
+mkdir -p "$working_dir"/../files
+cp "$file_real_path" "$working_dir"/../files/
 
 sed /Depends:/d -i tmp/DEBIAN/control
 sed /Recommends:/d -i tmp/DEBIAN/control
