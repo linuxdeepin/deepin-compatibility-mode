@@ -1,4 +1,4 @@
-.PHONY: install all
+.PHONY: install all deb
 
 all: apricot_v20.8-compatible.tar.gz
 
@@ -12,3 +12,13 @@ install: all demo/*
 	install demo/* ${DESTDIR}/usr/bin/
 	install -d ${DESTDIR}/usr/share/deepin/compatibility-mode/
 	install apricot_v20.8-compatible.tar.gz ${DESTDIR}/usr/share/deepin/compatibility-mode/
+
+deb: deepin-compatibility-mode.deb
+
+deepin-compatibility-mode.deb: debian/*
+	mkdir -p tmp/deepin-compatibility-mode
+	install -d tmp/deepin-compatibility-mode/DEBIAN
+	install debian/* tmp/deepin-compatibility-mode/DEBIAN
+	DESTDIR=tmp/deepin-compatibility-mode make install
+	dpkg-deb --build tmp/deepin-compatibility-mode
+	mv tmp/deepin-compatibility-mode.deb .
