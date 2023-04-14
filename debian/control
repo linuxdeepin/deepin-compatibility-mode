@@ -1,6 +1,6 @@
 Package: deepin-compatibility-mode
 Version: 0.1.0
-Depends: distrobox, jq
+Depends: distrobox, jq, libnotify-bin
 Maintainer: Chen Linxuan <me@black-desk.cn>
 Architecture: amd64
 Description: distrobox wrapper for install and running debs inside a v20.8 container
