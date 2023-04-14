@@ -36,7 +36,7 @@ if [[ -d "tmp/opt" ]]; then
 	for p in "${apps[@]}"; do
 		handle_usr_desktop tmp/opt/apps/"$p"/entries "$p" "$working_dir"/applications/
 		cp -a tmp/opt/apps/"$p"/entries/icons "$working_dir"/ # check exists
-		cp -a tmp/opt/apps/"$p"/info "$working_dir"
+		cp -a tmp/opt/apps/"$p"/info "$working_dir"/..
 	done
 fi
 
