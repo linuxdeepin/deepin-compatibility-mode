@@ -31,8 +31,10 @@ main() {
 	done
 
 	deepin_compatibility_mode_path="$(dirname "${0}")"
-        
+
 	"$deepin_compatibility_mode_path/deepin-compatibility-mode-install" --deb-id="$deb_id"
+
+	notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode load application done.' --icon=dialog-information
 
 	container=$("$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
 

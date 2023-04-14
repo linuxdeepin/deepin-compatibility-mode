@@ -46,10 +46,11 @@ main() {
 		debs+=("\"${REPLY/#//run/host}\"")
 	done < <(find /opt/apps/"$deb_id"/files -name '*.deb' -print0)
 
+	notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode loading application.' --icon=dialog-information
 	distrobox enter -n "$container_name" -- bash -c \
-                "sudo cp ${debs[*]} /var/cache/apt/archives"
+		"sudo cp ${debs[*]} /var/cache/apt/archives"
 	exec distrobox enter -n "$container_name" -- bash -c \
-                "sudo apt install -y ${debs[*]}"
+		"sudo apt install -y ${debs[*]}"
 }
 
 main "$@"
