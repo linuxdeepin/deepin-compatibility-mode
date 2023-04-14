@@ -13,7 +13,7 @@ shift
 docker images 2>&1 | grep v20.8-compatible &>/dev/null ||
 	(
 		notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode loading image.' --icon=dialog-information &>/dev/null
-		docker load /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz &>/dev/null
+		docker load -i /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz &>/dev/null
 	) ||
 	exit 255
 
