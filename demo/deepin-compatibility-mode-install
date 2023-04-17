@@ -38,7 +38,11 @@ main() {
 	if ! distrobox-list | grep "$container_name" &>/dev/null; then
 		distrobox create -Y \
 			-i "$(echo "$container" | jq -r ".image")" \
-			-n "$container_name" || exit
+			-n "$container_name" \
+			--additional-flags \
+			"--env LANG=$LANG --env LC_COLLATE=$LC_COLLATE --env LC_CTYPE=$LC_CTYPE --env LC_MONETARY=$LC_MONETARY --env LC_MESSAGES=$LC_MESSAGES --env LC_NUMERIC=$LC_NUMERIC --env LC_TIME=$LC_TIME --env LC_ALL=$LC_ALL" \
+			--init-hooks \
+			"cp /run/host/etc/locale.gen /etc/locale.gen && locale-gen" || exit 255
 	fi
 
 	debs=()
