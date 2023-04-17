@@ -53,8 +53,10 @@ main() {
 	notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode loading application.' --icon=dialog-information
 	distrobox enter -n "$container_name" -- bash -c \
 		"sudo cp ${debs[*]} /var/cache/apt/archives"
-	exec distrobox enter -n "$container_name" -- bash -c \
+	distrobox enter -n "$container_name" -- bash -c \
 		"sudo apt install -y ${debs[*]}"
+	exec distrobox enter -n "$container_name" -- bash -c \
+		"sudo deepin-app-store-tool"
 }
 
 main "$@"
