@@ -10,10 +10,15 @@ shift
 # TODO(black_desk): search db or somehow get container configuration
 
 # NOTE(black_desk): we should load tar before we return
-docker images 2>&1 | grep v20.8-compatible &>/dev/null ||
+podman images 2>&1 | grep v20.8-compatible &>/dev/null ||
 	(
+		grep "$(id -n -u)" /etc/subuid /etc/subgid &>/dev/null ||
+			notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode need capability to add subuid and subgid' --icon=dialog-information &>/dev/null ||
+			pkexec usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "$(id -n -u)" &>/dev/null ||
+			exit 255
+
 		notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode loading image.' --icon=dialog-information &>/dev/null
-		docker load -i /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz &>/dev/null
+		gzip -c /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz 2>/dev/null | podman load  &>/dev/null
 	) ||
 	exit 255
 
