@@ -1,5 +1,7 @@
 Package: deepin-compatibility-mode
-Version: 0.1.0
+Version: 0.1.1
+Section: misc
+Priority: optional
 Depends: distrobox, jq, libnotify-bin, podman
 Maintainer: Chen Linxuan <me@black-desk.cn>
 Architecture: amd64
