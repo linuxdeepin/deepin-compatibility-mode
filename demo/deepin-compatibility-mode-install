@@ -25,6 +25,10 @@ main() {
 			deb_id="$2"
 			shift 2
 			;;
+		--container)
+			container="$2"
+			shift 2
+			;;
 		--)
 			shift
 			break
@@ -32,17 +36,9 @@ main() {
 		esac
 	done
 
-	container=$(. "$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
-
-	container_name=$(echo "$container" | jq -r ".name")
-	if ! distrobox-list | grep "$container_name" &>/dev/null; then
-		distrobox create -Y \
-			-i "$(echo "$container" | jq -r ".image")" \
-			-n "$container_name" \
-			--additional-flags \
-			"--env LANG=$LANG --env LC_COLLATE=$LC_COLLATE --env LC_CTYPE=$LC_CTYPE --env LC_MONETARY=$LC_MONETARY --env LC_MESSAGES=$LC_MESSAGES --env LC_NUMERIC=$LC_NUMERIC --env LC_TIME=$LC_TIME --env LC_ALL=$LC_ALL" \
-			--init-hooks \
-			"cp /run/host/etc/locale.gen /etc/locale.gen && locale-gen" || exit 255
+	if [ -z "$container" ]; then
+		container=$(. "$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
+		container=$(echo "$container" | jq -r ".name")
 	fi
 
 	debs=()
@@ -50,13 +46,17 @@ main() {
 		debs+=("\"${REPLY/#//run/host}\"")
 	done < <(find /opt/apps/"$deb_id"/files -name '*.deb' -print0)
 
-	notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode loading application.' --icon=dialog-information
-	distrobox enter -n "$container_name" -- bash -c \
-		"sudo cp ${debs[*]} /var/cache/apt/archives"
-	distrobox enter -n "$container_name" -- bash -c \
-		"sudo apt install -y ${debs[*]}"
-	exec distrobox enter -n "$container_name" -- bash -c \
-		"sudo deepin-app-store-tool"
+	notify-send \
+		'deepin V20 compatibility mode' \
+		'Loading application.' \
+		--icon=dialog-information
+
+	distrobox enter -n "$container" -- bash -c \
+		"sudo cp ${debs[*]} /var/cache/apt/archives" || exit 255
+	distrobox enter -n "$container" -- bash -c \
+		"sudo apt install -y ${debs[*]}" || exit 255
+	exec distrobox enter -n "$container" -- bash -c \
+		"sudo deepin-app-store-tool" || exit 255
 }
 
 main "$@"

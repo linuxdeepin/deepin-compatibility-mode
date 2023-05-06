@@ -32,13 +32,45 @@ main() {
 
 	deepin_compatibility_mode_path="$(dirname "${0}")"
 
-	"$deepin_compatibility_mode_path/deepin-compatibility-mode-install" --deb-id="$deb_id"
-
-	notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode load application done.' --icon=dialog-information
-
 	container=$("$deepin_compatibility_mode_path/deepin-compatibility-mode-container" "$deb_id")
 
 	container_name=$(echo "$container" | jq -r ".name")
+
+	if ! distrobox-list | grep "$container_name" &>/dev/null; then
+		if ! distrobox create -Y \
+			-i "$(echo "$container" | jq -r ".image")" \
+			-n "$container_name" \
+			--additional-flags \
+			"--env LANG=$LANG --env LC_COLLATE=$LC_COLLATE --env LC_CTYPE=$LC_CTYPE --env LC_MONETARY=$LC_MONETARY --env LC_MESSAGES=$LC_MESSAGES --env LC_NUMERIC=$LC_NUMERIC --env LC_TIME=$LC_TIME --env LC_ALL=$LC_ALL" \
+			--init-hooks \
+			"cp /run/host/etc/locale.gen /etc/locale.gen && locale-gen" \
+			--no-entry; then
+
+			notify-send 'deepin V20 compatibility mode' \
+				'Failed to create container.' \
+				--icon=dialog-information
+			exit 255
+		fi
+	fi
+
+	if [ -n "$deb_id" ]; then
+		if "$deepin_compatibility_mode_path/deepin-compatibility-mode-install" \
+			--container "$container_name" \
+			--deb-id="$deb_id"; then
+
+			notify-send 'deepin V20 compatibility mode' \
+				'Load application done.' \
+				--icon=dialog-information
+		else
+			notify-send 'deepin V20 compatibility mode' \
+				'Failed to load application.' \
+				--icon=dialog-information
+		fi
+	fi
+
+	if [ $# -eq 0 ]; then
+		exec distrobox enter -n "$container_name"
+	fi
 
 	exec distrobox enter -n "$container_name" -- "$@"
 }

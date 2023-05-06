@@ -7,22 +7,31 @@ fi
 deb_id=$1
 shift
 
+# NOTE(black_desk): With no deb_id provided this script should return a default
+# container.
+
 # TODO(black_desk): search db or somehow get container configuration
 
 # NOTE(black_desk): we should load tar before we return
 podman images 2>&1 | grep v20.8-compatible &>/dev/null ||
 	(
 		grep "$(id -n -u)" /etc/subuid /etc/subgid &>/dev/null ||
-			notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode need capability to add subuid and subgid' --icon=dialog-information &>/dev/null ||
+			notify-send \
+				'deepin V20 compatibility mode' \
+				'Need capability to add subuid and subgid' \
+				--icon=dialog-information &>/dev/null ||
 			pkexec usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "$(id -n -u)" &>/dev/null ||
 			exit 255
 
-		notify-send 'Deepin V20 compatibility mode' 'Deepin V20 compatibility mode loading image.' --icon=dialog-information &>/dev/null
-		gzip -c /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz 2>/dev/null | podman load  &>/dev/null
+		notify-send \
+			'deepin V20 compatibility mode' \
+			'Loading container image' \
+			--icon=dialog-information &>/dev/null
+		gzip -c /usr/share/deepin/compatibility-mode/apricot_v20.8-compatible.tar.gz 2>/dev/null | podman load &>/dev/null
 	) ||
 	exit 255
 
 echo '{
-        "name": "DeepinV20.8CompatibleMode",
+        "name": "deepin-v20",
         "image": "linuxdeepin/apricot:v20.8-compatible"
 }'
