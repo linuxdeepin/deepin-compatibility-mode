@@ -3,9 +3,7 @@
 all: apricot_v20.8-compatible.tar.gz
 
 apricot_v20.8-compatible.tar.gz: docker/*
-	# NOTE(black_desk): uncomment the line below to let docker build the
-	# image locally, if you do not have the image downloaded yet:
-	# docker build -t linuxdeepin/apricot:v20.8-compatible ./docker
+	docker pull linuxdeepin/apricot:v20.8-compatible
 	docker save -o apricot_v20.8-compatible.tar linuxdeepin/apricot:v20.8-compatible
 	gzip -9 apricot_v20.8-compatible.tar
 
