@@ -14,6 +14,10 @@ install: all demo/*
 	install demo/* ${DESTDIR}/usr/bin/
 	install -d ${DESTDIR}/usr/share/deepin/compatibility-mode/
 	install apricot_v20.8-compatible.tar.gz ${DESTDIR}/usr/share/deepin/compatibility-mode/
+	install -d ${DESTDIR}/usr/share/applications/
+	install misc/deepin-v20.desktop ${DESTDIR}/usr/share/applications/
+	install -d ${DESTDIR}/usr/share/icons/
+	install misc/deepin-compatible-mode.svg ${DESTDIR}/usr/share/icons
 
 deb: deepin-compatibility-mode.deb
 

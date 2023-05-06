@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=deepin (V20)
+GenericName=Terminal entering deepin V20 compatible mode
+Comment=Terminal entering deepin V20 compatible mode
+Categories=System;Utility
+Exec=/usr/bin/dcm start
+Icon=deepin-compatible-mode
+NoDisplay=false
+Terminal=true
+TryExec=/usr/bin/dcm
+Type=Application
