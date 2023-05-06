@@ -52,6 +52,9 @@ main() {
 		--icon=dialog-information
 
 	distrobox enter -n "$container" -- bash -c \
+		"sudo apt install -y dde-qt5integration dde-qt5xcb-plugin"
+
+	distrobox enter -n "$container" -- bash -c \
 		"sudo cp ${debs[*]} /var/cache/apt/archives" || exit 255
 	distrobox enter -n "$container" -- bash -c \
 		"sudo apt install -y ${debs[*]}" || exit 255
