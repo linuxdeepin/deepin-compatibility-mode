@@ -1,5 +1,5 @@
 Package: deepin-compatibility-mode
-Version: 0.1.1
+Version: 0.1.2
 Section: misc
 Priority: optional
 Depends: distrobox, jq, libnotify-bin, podman
