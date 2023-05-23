@@ -36,7 +36,7 @@ main() {
 
 	container_name=$(echo "$container" | jq -r ".name")
 
-	container_image_hash=$(echo "$container" | jq -r ".imageHash")
+	container_image_id=$(echo "$container" | jq -r ".imageId")
 
 	if ! distrobox-list | grep "$container_name" &>/dev/null; then
 		if ! distrobox create -Y \
@@ -70,9 +70,9 @@ main() {
 		fi
 	fi
 
-	if [ "$(podman inspect "$container_name" | jq -r '.[0].Image')" != "$container_image_hash" ]; then
+	if [ "$(podman inspect "$container_name" | jq -r '.[0].Image')" != "$container_image_id" ]; then
 		notify-send 'deepin V20 compatibility mode' \
-			'Refused to run container '"$container_name"' with incorrect image hash.' \
+			'Refused to run container '"$container_name"' with incorrect image ID.' \
 			--icon=dialog-information
 		exit 255
 	fi
