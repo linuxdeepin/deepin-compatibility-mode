@@ -33,5 +33,6 @@ podman images 2>&1 | grep v20.8-compatible &>/dev/null ||
 
 echo '{
         "name": "deepin-v20",
-        "image": "linuxdeepin/apricot:v20.8-compatible"
+        "image": "linuxdeepin/apricot:v20.8-compatible",
+        "imageId": "6b03b24c2d82a505e43551eaa877f321672aaa5b3ee9bdaae2cf894572a0cd31"
 }'

@@ -36,9 +36,21 @@ main() {
 
 	container_name=$(echo "$container" | jq -r ".name")
 
+	container_image=$(echo "$container" | jq -r ".image")
+
+	container_image_id=$(echo "$container" | jq -r ".imageId")
+
 	if ! distrobox-list | grep "$container_name" &>/dev/null; then
+		podman_images_json="$(podman images --format json)"
+		if { ! echo "$podman_images_json" | jq -r 'map(.Id) | join("\n")' | grep "$container_image_id" &> /dev/null; } && { echo "$podman_images_json" | jq -r 'map(.Names | select(. != null) | join("\n")) | join("\n")' | grep "$container_image" &> /dev/null; }; then
+			notify-send 'deepin V20 compatibility mode' \
+				'Refused to use image '"$container_image"' with incorrect ID.' \
+				--icon=dialog-information
+			exit 255
+		fi
+
 		if ! distrobox create -Y \
-			-i "$(echo "$container" | jq -r ".image")" \
+			-i "$container_image_id" \
 			-n "$container_name" \
 			--additional-flags \
 			"--env LANG=$LANG --env LC_COLLATE=$LC_COLLATE --env LC_CTYPE=$LC_CTYPE --env LC_MONETARY=$LC_MONETARY --env LC_MESSAGES=$LC_MESSAGES --env LC_NUMERIC=$LC_NUMERIC --env LC_TIME=$LC_TIME --env LC_ALL=$LC_ALL" \
@@ -66,6 +78,13 @@ main() {
 				'Failed to load application.' \
 				--icon=dialog-information
 		fi
+	fi
+
+	if [ "$(podman inspect "$container_name" | jq -r '.[0].Image')" != "$container_image_id" ]; then
+		notify-send 'deepin V20 compatibility mode' \
+			'Refused to run container '"$container_name"' with incorrect image ID.' \
+			--icon=dialog-information
+		exit 255
 	fi
 
 	if [ $# -eq 0 ]; then
